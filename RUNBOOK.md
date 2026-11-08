@@ -1,18 +1,25 @@
-# Round A runbook
+# Runbook
 
-## What has run in this environment
-- Parser + heuristic baseline executed against all 50 supplied episodes.
-- 3,727 timed beats parsed; 368 heuristic candidates; top 15 ranked.
-- Zero parser warnings in this corpus.
+## What has been run
+- **Heuristic baseline** on all 50 episodes: 3,727 timed beats, 367 candidates, top 15 ranked, zero parser warnings.
+- **LLM run1** (`gemini-3.5-flash-lite`, local via `src/run.py`): 123 model calls, 530 s, 73 candidates judged, 1 passed all checks, 1 schema failure (Episode 20).
+- **LLM run2** (same model and input): 117 model calls, 734 s, 67 candidates judged, 3 passed, 0 failures.
 - Three parser unit tests pass.
-- No paid or free LLM API was called here. LLM candidate selection and cold-viewer judging are implemented in `src/llm_pipeline.py` and are intended to run in Colab after entering a current provider model ID and key.
 
-## Local heuristic rerun
-`python src/run.py --input /path/to/screenplay-folder-or.zip --provider heuristic`
+## Run on a new show in under 5 minutes
+1. `pip install -r requirements.txt`
+2. Quick check, no key needed:
+   `python src/run.py --input <folder_or_zip> --provider heuristic`
+3. Full run:
+   `set GEMINI_API_KEY=<key>` (macOS/Linux: `export`)
+   `python src/run.py --input <folder_or_zip> --provider gemini --model gemini-3.5-flash-lite --run-label run1`
+4. Open `raw_outputs/llm/run1/ranked_top15.json` for the ranked list and `run_summary.json` for counts, runtime and failures.
 
-## LLM rerun
-`python src/run.py --input /path/to/screenplay-folder-or.zip --provider gemini --model <current-model-id> --run-label run1`
-Supported adapters: `gemini`, `groq`, `anthropic`, `openai`. Set the matching API key environment variable first. Run twice with labels `run1` and `run2` to measure stability. Colab notebook automates this and zips outputs.
+## If something fails
+- **404 "no longer available"** → use the model the error message names.
+- **429 quota / 503 high demand** → try another model, wait for quota reset, or switch provider (`--provider groq` with `GROQ_API_KEY`).
+- **No key or no internet** → fall back to `--provider heuristic`, which always runs.
+- **Interrupted run** → re-run the same command with the same `--run-label`. Finished calls are cached and skipped.
 
 ## Keep confidential material private
-The screenplay ZIP and all raw outputs containing screenplay-derived text are excluded from the public repository ZIP. Share the raw outputs only through the assignment's intended private submission channel; do not publish them in a public GitHub repository.
+Screenplays and raw outputs stay out of the public repo. Share raw outputs only through the private submission link.
