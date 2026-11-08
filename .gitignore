@@ -1,0 +1,7 @@
+.env
+__pycache__/
+.venv/
+input_pack_local/
+raw_outputs/
+*.zip
+.ipynb_checkpoints/
