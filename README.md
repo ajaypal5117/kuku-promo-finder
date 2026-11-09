@@ -1,10 +1,12 @@
 # Kuku Promo Finder (Problem 1)
 
+**Live app:** https://kuku-promo-finder-ajaypal.streamlit.app/ (heuristic baseline, upload a screenplay ZIP and get ranked promos instantly)
+
 Reads microdrama screenplays and finds 20–60s promo clips: a hook in the first 3 seconds, an unresolved cliffhanger at the end, and enough context for a cold viewer. Outputs the episode, start/end timestamps, hook, cliffhanger and a one-line reason for each candidate, ranked.
 
 **Status:** both modes have been run end to end on all 50 supplied episodes.
 - Heuristic mode (no API): 3,727 beats parsed, 367 candidates, top 15 ranked.
-- LLM mode (`gemini-3.5-flash-lite`, run twice for stability): 73 and 67 candidates, judged and ranked. Results, gold-set comparison and failures are in the solution doc and `raw_outputs/evaluation.md` (shared privately, not in this repo).
+- LLM mode (`gemini-3.5-flash-lite`, run twice for stability): 73 and 67 candidates, judged and ranked. Results, gold-set comparison and failures are in the solution doc and `raw_outputs/llm/evaluation.md` (shared privately, not in this repo).
 
 ## How it works
 1. **Parser (code):** splits each screenplay into numbered, timestamped beats (`E001-B081` etc.).
